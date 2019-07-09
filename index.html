@@ -1,0 +1,214 @@
+<!DOCTYPE html><html><head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0">
+    <meta name="author" content="leaf">
+    <meta name="description" content="&#x6C47;&#x805A;&#x5168;&#x7403;&#x6F6E;&#x6D41;&#x7F8E;&#x5986;&#x8FBE;&#x4EBA;&#xFF0C;
+    &#x62E5;&#x6709;&#x5F3A;&#x52BF;&#x5185;&#x5BB9;&#x548C;&#x72EC;&#x5BB6;&#x53D8;&#x7F8E;&#x8BFE;&#x7A0B;&#xFF0C;&#x4E3A;&#x4F60;&#x5B9A;&#x5236;&#x81EA;&#x5DF1;&#x7684;&#x53D8;&#x7F8E;&#x6307;&#x5357;...">
+    <meta name="keywords" content="&#x65F6;&#x5C1A;&#x7F8E;&#x5986;&#x5185;&#x5BB9;&#x5206;&#x4EAB;&#x793E;&#x533A;">
+    <title>LIKE &#x65F6;&#x5C1A;&#x7F8E;&#x5986;&#x5185;&#x5BB9;&#x5206;&#x4EAB;&#x793E;&#x533A;</title>
+    <style type="text/css">
+        html, body {
+            height: 100%;
+            word-wrap: break-word;
+        }
+
+        html, body, h1, h2, h3, h4, h5, h6, p, ul, ol, li, dl, dt, form, th, td, hr {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-width: 320px;
+            background: #eee;
+            color: #404040;
+            font: 14px/1.3 sans-serif;
+            outline: 0;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+            -webkit-text-size-adjust: none;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        h1, h2, h3, h4, h5, h6, p, input, button, select, textarea {
+            font-size: 14px;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+            outline: 0;
+        }
+
+        a, a:visited {
+            text-decoration: none;
+        }
+
+        p {
+            margin: 0;
+        }
+
+        img {
+            max-width: 100%;
+            border: 0;
+        }
+
+        .wrap {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: url("./assets/img/bj@2x.png") center top/100% auto no-repeat;
+        }
+
+        .box {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -webkit-transform: translate3d(-50%, -50%, 0);
+            -moz-transform: translate3d(-50%, -50%, 0);
+            -o-transform: translate3d(-50%, 50%, 0);
+            transform: translate3d(-50%, -50%, 0);
+        }
+
+        .logo, .download {
+            width: 240px;
+            margin: auto;
+        }
+
+        .logo {
+            width: 227px;
+            margin-bottom: 13px;
+        }
+
+        .logo img {
+            display: block;
+            width: 100%;
+        }
+
+        .download-btn {
+            display: block;
+            width:240px;
+            height:48px;
+            background:linear-gradient(90deg,rgba(93,121,255,1) 0%,rgba(186,102,254,1) 100%);
+            box-shadow:0px 8px 6px 0px rgba(114,125,255,0.2);
+            border-radius:24px;
+            line-height: 48px;
+            font-size:18px;
+            font-family:PingFangSC-Medium;
+            font-weight:500;
+            color:rgba(255,255,255,1);
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .mask {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, .6);
+            display: none;
+        }
+        .mask img {
+            display: block;
+            margin-top: 20px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<input type="hidden" id="params" data-type="1" data-img_url="" data-download_url="http://alpha-s.iyanzhi.com/testbuild/test/pengyouquan/gm_alpha_pengyouquan.apk" data-second="" data-default_url="&#x4E0D;&#x8DF3;&#x8F6C;" data-title="">
+
+<div class="wrap" id="js_download">
+    <div class="box">
+        <div class="logo">
+            <img src="./assets/img/logo@2x.png">
+        </div>
+        <div class="download">
+            <span class="download-btn" id="dowonloadBtn">立即下载</span>
+        </div>
+    </div>
+    <div class="mask" id="mask">
+        <img src="./assets/img/guide.png">
+    </div>
+</div>
+<script>
+    /**
+     @type 跳转方式：1：直接跳下载 2：有背景图点击下载 3：有背景图支持点击和自动下载
+     @img_url 背景图url
+     @download_url 安卓包的下载地址
+     @second 多少秒下载 默认是3秒
+     @default_url 在pc上的跳转地址 默认的是 http://www.igengmei.com 不跳转就填不跳转
+     **/
+    (function () {
+        var sUserAgent = navigator.userAgent.toLowerCase(),
+                isWeixin = (sUserAgent.match(/micromessenger/i) == 'micromessenger'),
+                isIpad = (sUserAgent.match(/ipad/i) == 'ipad'),
+                isIphone = (sUserAgent.match(/iphone/i) == 'iphone'),
+                isAndroid = (sUserAgent.match(/android/i) == 'android'),
+                tips = document.getElementById('js_tips'),
+                download = document.getElementById('dowonloadBtn'),
+                mask = document.getElementById('mask');
+                params = document.getElementById('params'),
+                type = Number(params.getAttribute('data-type')),
+                imgUrl = params.getAttribute('data-img_url'),
+                download_url = params.getAttribute('data-download_url'),
+                second = params.getAttribute('data-second') * 1000 || 3000,
+                defaulturl = params.getAttribute('data-default_url') || 'http://www.igengmei.com',
+                title = params.getAttribute('data-title') || "like app-我的变美指南";
+        document.title = title;
+        function downloadFn() {
+            if (isWeixin && isAndroid) {
+                download.style.display = 'block'
+            }
+            location.href = isAndroid ? download_url : 'https://itunes.apple.com/cn/app/id1442774408?mt=8';
+        }
+
+        download.addEventListener('click', downloadFn)
+        // switch (type) {
+        //     case 1: {
+        //         img.style.display = 'none';
+        //         downloadFn()
+        //         break;
+        //     }
+        //     case 2: {
+        //         img.setAttribute('src', imgUrl);
+        //         text.style.display = 'none';
+        //         break;
+        //     }
+        //     case 3: {
+        //         img.setAttribute('src', imgUrl);
+        //         text.style.display = 'none';
+        //         var timeFn = setTimeout(function () {
+        //             downloadFn()
+        //         }, isWeixin ? second : 1000);
+        //     }
+        // }
+        // download.addEventListener('click', function (e) {
+        //     if (isWeixin && isAndroid) {
+        //         tips.style.visibility = 'visible';
+        //     } else {
+        //         downloadFn()
+        //     }
+        // }, false);
+        // setTimeout(function () {
+        //     if (isWeixin && isAndroid) {
+        //         tips.style.visibility = 'visible';
+        //     }
+        // }, 1000)
+        // tips.addEventListener('click', function (e) {
+        //     this.style.visibility = 'hidden';
+        // }, false);
+
+        // if (isAndroid || isIphone || isIpad) {
+        //     isAndroid && (tips.style.backgroundImage = 'url("http://hera.s.igengmei.com/2017/09/25/6660e52253")');
+        // } else {
+        //     if (defaulturl == '不跳转') {
+        //         return false
+        //     } else {
+        //         location.href = defaulturl;
+        //     }
+        // }
+    })();
+</script>
+<section style="display:none">
+    <script src="http://s4.cnzz.com/z_stat.php?id=1253975948&amp;web_id=1253975948" language="JavaScript"></script>
+</section>
+
+
+</body></html>

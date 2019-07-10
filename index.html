@@ -119,6 +119,28 @@
             font-size: 24px;
             color: #fff;
         }
+        .pc {
+            display: none;
+        }
+        @media (min-width: 769px) {
+            .mobile {
+                display: none;
+            }
+            .pc {
+                display: block;
+            }
+            .download {
+                width: 480px;
+                font-size: 0;
+            }
+            .download .download-btn {
+                width: 220px;
+                display: inline-block;
+            }
+            .download .download-btn:first-child {
+                margin-right: 40px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -129,8 +151,12 @@
         <div class="logo">
             <img src="./assets/img/logo@2x.png">
         </div>
-        <div class="download">
+        <div class="download mobile">
             <span class="download-btn" id="dowonloadBtn">立即下载</span>
+        </div>
+        <div class="download pc">
+            <span class="download-btn" id="androidDownload">安卓下载</span>
+            <span class="download-btn" id="iosDownload">IOS下载</span>
         </div>
     </div>
     <div class="mask" id="mask">
@@ -144,7 +170,7 @@
      @img_url 背景图url
      **/
     (function () {
-        var ua = navigator.userAgent
+        var iosLink = 'https://itunes.apple.com/cn/app/id1442774408?mt=8'
         var sUserAgent = navigator.userAgent.toLocaleLowerCase(),
             isWeixin = (sUserAgent.match(/micromessenger/i) == 'micromessenger'),
             isIpad = (sUserAgent.match(/ipad/i) == 'ipad'),
@@ -152,11 +178,11 @@
             isAndroid = (sUserAgent.match(/android/i) == 'android'),
             isQQ = sUserAgent.match(/ qq/) == ' qq'
             download = document.getElementById('dowonloadBtn'),
-            mask = document.getElementById('mask');
-            close = document.getElementById('close');
-            download_url = params.getAttribute('data-download_url');
+            mask = document.getElementById('mask'),
+            close = document.getElementById('close'),
+            download_url = params.getAttribute('data-download_url'),
         function downloadFn() {
-            location.href = isAndroid ? download_url : 'https://itunes.apple.com/cn/app/id1442774408?mt=8';
+            location.href = isAndroid ? download_url : iosLink;
         }
         download.addEventListener('click', clickBtn)
         function clickBtn() {
@@ -168,6 +194,17 @@
         }
         close.addEventListener('click', function() {
             mask.style.display = 'none';
+        })
+        
+        var androidDownload = document.getElementById('androidDownload');
+        var iosDownload = document.getElementById('iosDownload');
+        console.log('^^^', androidDownload)
+        // 安卓下载
+        androidDownload.addEventListener('click', function() {
+            location.href = download_url
+        })
+        iosDownload.addEventListener('click', function() {
+            location.href = iosLink
         })
     })();
 </script>

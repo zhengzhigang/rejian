@@ -2,10 +2,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0">
     <meta name="author" content="leaf">
-    <meta name="description" content="&#x6C47;&#x805A;&#x5168;&#x7403;&#x6F6E;&#x6D41;&#x7F8E;&#x5986;&#x8FBE;&#x4EBA;&#xFF0C;
-    &#x62E5;&#x6709;&#x5F3A;&#x52BF;&#x5185;&#x5BB9;&#x548C;&#x72EC;&#x5BB6;&#x53D8;&#x7F8E;&#x8BFE;&#x7A0B;&#xFF0C;&#x4E3A;&#x4F60;&#x5B9A;&#x5236;&#x81EA;&#x5DF1;&#x7684;&#x53D8;&#x7F8E;&#x6307;&#x5357;...">
-    <meta name="keywords" content="&#x65F6;&#x5C1A;&#x7F8E;&#x5986;&#x5185;&#x5BB9;&#x5206;&#x4EAB;&#x793E;&#x533A;">
-    <title>LIKE &#x65F6;&#x5C1A;&#x7F8E;&#x5986;&#x5185;&#x5BB9;&#x5206;&#x4EAB;&#x793E;&#x533A;</title>
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <title>热见下载</title>
     <style type="text/css">
         html, body {
             height: 100%;
@@ -56,7 +55,7 @@
 
         .box {
             position: absolute;
-            top: 50%;
+            top: 38%;
             left: 50%;
             -webkit-transform: translate3d(-50%, -50%, 0);
             -moz-transform: translate3d(-50%, -50%, 0);
@@ -107,12 +106,23 @@
         .mask img {
             display: block;
             margin-top: 20px;
-            width: 100%;
+            width: 80%;
+            float: right;
+            margin-right: 4%;
+        }
+        .mask .close {
+            display: inline-block;
+            position: fixed;
+            padding: 20px;
+            top: 4%;
+            left: 6%;
+            font-size: 24px;
+            color: #fff;
         }
     </style>
 </head>
 <body>
-<input type="hidden" id="params" data-type="1" data-img_url="" data-download_url="http://alpha-s.iyanzhi.com/testbuild/test/pengyouquan/gm_alpha_pengyouquan.apk" data-second="" data-default_url="&#x4E0D;&#x8DF3;&#x8F6C;" data-title="">
+<input type="hidden" id="params" data-type="1" data-img_url="" data-download_url="https://rejian-pic.oss-cn-beijing.aliyuncs.com/apk/app-release-1.0.apk" data-second="" data-default_url="&#x4E0D;&#x8DF3;&#x8F6C;" data-title="">
 
 <div class="wrap" id="js_download">
     <div class="box">
@@ -124,6 +134,7 @@
         </div>
     </div>
     <div class="mask" id="mask">
+        <span class="close" id="close">×</span>
         <img src="./assets/img/guide.png">
     </div>
 </div>
@@ -131,84 +142,34 @@
     /**
      @type 跳转方式：1：直接跳下载 2：有背景图点击下载 3：有背景图支持点击和自动下载
      @img_url 背景图url
-     @download_url 安卓包的下载地址
-     @second 多少秒下载 默认是3秒
-     @default_url 在pc上的跳转地址 默认的是 http://www.igengmei.com 不跳转就填不跳转
      **/
     (function () {
         var sUserAgent = navigator.userAgent.toLowerCase(),
-                isWeixin = (sUserAgent.match(/micromessenger/i) == 'micromessenger'),
-                isIpad = (sUserAgent.match(/ipad/i) == 'ipad'),
-                isIphone = (sUserAgent.match(/iphone/i) == 'iphone'),
-                isAndroid = (sUserAgent.match(/android/i) == 'android'),
-                tips = document.getElementById('js_tips'),
-                download = document.getElementById('dowonloadBtn'),
-                mask = document.getElementById('mask');
-                params = document.getElementById('params'),
-                type = Number(params.getAttribute('data-type')),
-                imgUrl = params.getAttribute('data-img_url'),
-                download_url = params.getAttribute('data-download_url'),
-                second = params.getAttribute('data-second') * 1000 || 3000,
-                defaulturl = params.getAttribute('data-default_url') || 'http://www.igengmei.com',
-                title = params.getAttribute('data-title') || "like app-我的变美指南";
-        document.title = title;
+            isWeixin = (sUserAgent.match(/micromessenger/i) == 'micromessenger'),
+            isIpad = (sUserAgent.match(/ipad/i) == 'ipad'),
+            isIphone = (sUserAgent.match(/iphone/i) == 'iphone'),
+            isAndroid = (sUserAgent.match(/android/i) == 'android'),
+            isQQ = !!sUserAgent.match(/mqqbrowser|qzone|qqbrowser/i)
+            download = document.getElementById('dowonloadBtn'),
+            mask = document.getElementById('mask');
+            close = document.getElementById('close');
+            download_url = params.getAttribute('data-download_url');
         function downloadFn() {
-            if (isWeixin && isAndroid) {
-                download.style.display = 'block'
-            }
             location.href = isAndroid ? download_url : 'https://itunes.apple.com/cn/app/id1442774408?mt=8';
         }
+        download.addEventListener('click', clickBtn)
 
-        download.addEventListener('click', downloadFn)
-        // switch (type) {
-        //     case 1: {
-        //         img.style.display = 'none';
-        //         downloadFn()
-        //         break;
-        //     }
-        //     case 2: {
-        //         img.setAttribute('src', imgUrl);
-        //         text.style.display = 'none';
-        //         break;
-        //     }
-        //     case 3: {
-        //         img.setAttribute('src', imgUrl);
-        //         text.style.display = 'none';
-        //         var timeFn = setTimeout(function () {
-        //             downloadFn()
-        //         }, isWeixin ? second : 1000);
-        //     }
-        // }
-        // download.addEventListener('click', function (e) {
-        //     if (isWeixin && isAndroid) {
-        //         tips.style.visibility = 'visible';
-        //     } else {
-        //         downloadFn()
-        //     }
-        // }, false);
-        // setTimeout(function () {
-        //     if (isWeixin && isAndroid) {
-        //         tips.style.visibility = 'visible';
-        //     }
-        // }, 1000)
-        // tips.addEventListener('click', function (e) {
-        //     this.style.visibility = 'hidden';
-        // }, false);
-
-        // if (isAndroid || isIphone || isIpad) {
-        //     isAndroid && (tips.style.backgroundImage = 'url("http://hera.s.igengmei.com/2017/09/25/6660e52253")');
-        // } else {
-        //     if (defaulturl == '不跳转') {
-        //         return false
-        //     } else {
-        //         location.href = defaulturl;
-        //     }
-        // }
+        function clickBtn() {
+            if (isWeixin && isAndroid || isQQ) {
+                mask.style.display = 'block';
+            } else {
+                downloadFn()
+            }
+        }
+        close.addEventListener('click', function() {
+            mask.style.display = 'none';
+        })
     })();
 </script>
-<section style="display:none">
-    <script src="http://s4.cnzz.com/z_stat.php?id=1253975948&amp;web_id=1253975948" language="JavaScript"></script>
-</section>
-
-
-</body></html>
+</body>
+</html>

@@ -144,12 +144,13 @@
      @img_url 背景图url
      **/
     (function () {
-        var sUserAgent = navigator.userAgent.toLowerCase(),
+        var ua = navigator.userAgent
+        var sUserAgent = navigator.userAgent.toLocaleLowerCase(),
             isWeixin = (sUserAgent.match(/micromessenger/i) == 'micromessenger'),
             isIpad = (sUserAgent.match(/ipad/i) == 'ipad'),
             isIphone = (sUserAgent.match(/iphone/i) == 'iphone'),
             isAndroid = (sUserAgent.match(/android/i) == 'android'),
-            isQQ = !!sUserAgent.match(/mqqbrowser|qzone|qqbrowser/i)
+            isQQ = sUserAgent.match(/ qq/) == ' qq'
             download = document.getElementById('dowonloadBtn'),
             mask = document.getElementById('mask');
             close = document.getElementById('close');
@@ -158,7 +159,6 @@
             location.href = isAndroid ? download_url : 'https://itunes.apple.com/cn/app/id1442774408?mt=8';
         }
         download.addEventListener('click', clickBtn)
-
         function clickBtn() {
             if (isWeixin && isAndroid || isQQ) {
                 mask.style.display = 'block';

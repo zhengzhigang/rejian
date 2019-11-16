@@ -199,3 +199,30 @@ button:focus {
     text-align: center;
     color: #fff;
 }
+
+/* mask css */
+.mask {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, .6);
+    display: none;
+}
+.mask img {
+    display: block;
+    margin-top: .2rem;
+    width: 80%;
+    float: right;
+    margin-right: 4%;
+}
+.mask .close {
+    display: inline-block;
+    position: fixed;
+    padding: .2rem;
+    top: 4%;
+    left: 6%;
+    font-size: .24rem;
+    color: #fff;
+}

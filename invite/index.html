@@ -40,6 +40,10 @@
         </div>
     </div>
     <div class="toast">dasds</div>
+    <div class="mask" id="mask">
+        <span class="close" id="close">×</span>
+        <img src="../assets/img/guide.png">
+    </div>
     <script>
         // rem.js
         ;(function (designWidth, maxWidth) {
@@ -105,6 +109,30 @@
     <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
     <script>
         $(function() {
+            var iosLink = 'https://itunes.apple.com/cn/app/%E7%83%AD%E8%A7%81/id1471481439'
+            var androidLink = 'https://rejian-pic.oss-cn-beijing.aliyuncs.com/apk/app-release-1.0.apk'
+            var sUserAgent = navigator.userAgent.toLocaleLowerCase(),
+                isWeixin = (sUserAgent.match(/micromessenger/i) == 'micromessenger'),
+                isAndroid = (sUserAgent.match(/android/i) == 'android'),
+                isQQ = sUserAgent.match(/ qq/) == ' qq'
+                mask = document.getElementById('mask'),
+                close = document.getElementById('close');
+            function downloadFn() {
+                location.href = isAndroid ? androidLink : iosLink;
+            }
+
+            function clickBtn() {
+                if (isAndroid && (isWeixin || isQQ)) {
+                    mask.style.display = 'block';
+                } else {
+                    downloadFn()
+                }
+            }
+            // 关闭mask
+            close.addEventListener('click', function() {
+                mask.style.display = 'none';
+            })
+
             // 发送验证码倒计时
             var countdown = 60;
             function settime(obj) {
@@ -191,6 +219,7 @@
             $('.invite-model .model-button').click(function() {
                 $('.invite-model').hide();
                 // 这里写下载逻辑
+                clickBtn();
             })
         });
     </script>

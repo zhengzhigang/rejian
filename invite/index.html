@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="../assets/css/invite/index.css">
+</head>
+<body>
+    <section class="register-top">
+        <div class="register-form">
+            <p class="form-title">
+                <img src="../assets/img/invite/vip.png" alt="">
+                三天VIP会员
+            </p>
+            <div>
+                <div class="form-item">
+                    <label class="input-phone-icon"></label>
+                    <input class="input-phone" name="phone" type="text" placeholder="请输入手机号" maxlength="11">
+                </div>
+                <div class="form-item">
+                    <label class="input-code-icon"></label>
+                    <input class="input-code" name="code" type="text" placeholder="请输入验证码" maxlength="6">
+                    <button class="send-code-btn">获取验证码</button>
+                </div>
+                <div class="form-item">
+                    <button class="submit-btn">一键领取</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="register-bottom">
+        <p class="head-img-title">大家都在这里</p>
+        <img src="../assets/img/invite/head-list.png">
+    </section>
+    <div class="invite-model">
+        <div class="model-content">
+            <button class="model-button">下载热缘APP</button>
+        </div>
+    </div>
+    <div class="toast">dasds</div>
+    <script>
+        // rem.js
+        ;(function (designWidth, maxWidth) {
+            var doc = document,
+                win = window;
+            var docEl = doc.documentElement;
+            var tid;
+            var rootItem, rootStyle;
+
+            function refreshRem() {
+                var width = docEl.getBoundingClientRect().width;
+                if (!maxWidth) {
+                    maxWidth = 540;
+                }
+                ;
+                if (width > maxWidth) {
+                    width = maxWidth;
+                }
+                //与淘宝做法不同，直接采用简单的rem换算方法1rem=100px
+                var rem = width * 100 / designWidth;
+                //兼容UC开始
+                rootStyle = "html{font-size:" + rem + 'px !important}';
+                rootItem = document.getElementById('rootsize') || document.createElement("style");
+                if (!document.getElementById('rootsize')) {
+                    document.getElementsByTagName("head")[0].appendChild(rootItem);
+                    rootItem.id = 'rootsize';
+                }
+                if (rootItem.styleSheet) {
+                    rootItem.styleSheet.disabled || (rootItem.styleSheet.cssText = rootStyle)
+                } else {
+                    try {
+                        rootItem.innerHTML = rootStyle
+                    } catch (f) {
+                        rootItem.innerText = rootStyle
+                    }
+                }
+                //兼容UC结束
+                docEl.style.fontSize = rem + "px";
+            };
+            refreshRem();
+
+            win.addEventListener("resize", function () {
+                clearTimeout(tid); //防止执行两次
+                tid = setTimeout(refreshRem, 300);
+            }, false);
+
+            win.addEventListener("pageshow", function (e) {
+                if (e.persisted) { // 浏览器后退的时候重新计算
+                    clearTimeout(tid);
+                    tid = setTimeout(refreshRem, 300);
+                }
+            }, false);
+
+            if (doc.readyState === "complete") {
+                doc.body.style.fontSize = "16px";
+            } else {
+                doc.addEventListener("DOMContentLoaded", function (e) {
+                    doc.body.style.fontSize = "16px";
+                }, false);
+            }
+        })(375, 750);
+    </script>
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <script>
+        $(function() {
+            // 发送验证码倒计时
+            var countdown = 60;
+            function settime(obj) {
+                if (countdown == 0) {
+                    obj.attr('disabled', false);
+                    obj.text('获取验证码');
+                    countdown = 60;
+                    return;
+                } else {
+                    obj.attr('disabled', true);
+                    obj.text('重新发送(' + countdown + ')');
+                    countdown--;
+                    setTimeout(function() {
+                        settime(obj)
+                    }, 1000);
+                }
+            }
+
+            // toast
+            function showToast(data) {
+                let op = {
+                    time: 2000,
+                    text: '错误信息'
+                }
+                op = Object.assign({}, op, data);
+                $('.toast').text(op.text).show();
+                setTimeout(function() {
+                    $('.toast').fadeOut(300);
+                }, op.time)
+            }
+
+            // 发送验证码
+            $('.register-form .send-code-btn').click(function() {
+                let _this = $(this);
+                $.ajax({
+                    url: 'http://39.107.105.168:8181/app/acc/inviteReg',
+                    method: 'POST',
+                    data: {},
+                    success: function(res) {
+                        console.log(11111, res)
+                        if (res.code === 200) {
+                            // 发送验证码成功
+                            settime(_this)
+                        }
+                    }
+                })
+            });
+
+            // 一键领取
+            var isClick = false
+            $('.register-form .submit-btn').click(function() {
+                if (isClick) {
+                    return
+                }
+                var phone = $('.input-phone').val();
+                var code = $('.input-code').val();
+                if (!phone || !code) {
+                    showToast({
+                        text: '请填写手机号或验证码'
+                    })
+                    return
+                }
+                var isClick = true
+                $.ajax({
+                    url: 'http://39.107.105.168:8181/app/acc/inviteReg',
+                    method: 'POST',
+                    data: {
+                        inviteId: 'fsfska',
+                        mobile: phone,
+                        verifyCode: code
+                    },
+                    success: function(res) {
+                        console.log(11111, res)
+                        isClick = false
+                        if (res.code === 200) {
+                            // 展示弹窗
+                            $('.invite-model').show();
+                        }
+                    }
+                })
+            });
+
+            // 下载
+            $('.invite-model .model-button').click(function() {
+                $('.invite-model').hide();
+                // 这里写下载逻辑
+            })
+        });
+    </script>
+</body>
+</html>

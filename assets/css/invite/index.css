@@ -56,9 +56,9 @@ button:focus {
 
 
 .register-top {
-    padding: 1.41rem .15rem .19rem;
+    padding: 1rem .15rem .19rem;
     height: 4.6rem;
-    background: url('../../img/invite/bj.png') center center/100% auto no-repeat;
+    background: url('../../img/invite/bj.png') center -0.41rem/100% auto no-repeat;
 }
 .register-form {
     padding: .20rem .35rem .08rem;
